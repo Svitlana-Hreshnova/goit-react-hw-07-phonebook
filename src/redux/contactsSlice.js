@@ -20,15 +20,14 @@ export const contactsSlice = createSlice({
     builder
       .addCase(fetchContacts.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.items = action.payload;
-        state.isLoading = false;
       })
-      .addCase(fetchContacts.rejected, (state) => {
+      .addCase(fetchContacts.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = "rejected";
+        state.error = action.payload;
       });
   },
 });
@@ -40,7 +39,7 @@ export const filterSlice = createSlice({
   initialState: "",
   reducers: {
     setFilter: (state, action) => {
-      return (state = action.payload);
+      state = action.payload;
     },
   },
 });
