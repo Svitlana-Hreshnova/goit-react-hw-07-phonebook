@@ -16,9 +16,6 @@ export const contactsSlice = createSlice({
     remove: (state, action) => {
       state.items = state.items.filter((contact) => contact.id !== action.payload);
       },
-    setFilter: (state, action) => {
-      state.filter = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -37,15 +34,3 @@ export const contactsSlice = createSlice({
 });
 
 export const { add, remove } = contactsSlice.actions;
-
-export const filterSlice = createSlice({
-  name: "filter",
-  initialState: "",
-  reducers: {
-    setFilter: (state, action) => {
-      state = action.payload;
-    },
-  },
-});
-
-export const { setFilter } = filterSlice.actions;
