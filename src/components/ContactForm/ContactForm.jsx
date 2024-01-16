@@ -1,46 +1,54 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from '../../redux/operation';
+import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
 
 const ContactForm = () => {
+  const contacts = useSelector(state => state.contacts.items);
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setNumber] = useState('');
+
+  const InputIdPhone = nanoid();
+  const InputIdName = nanoid();
 
   const handleNameChange = e => {
-    setName(e.target.value);
+    const { name, value } = e.currentTarget;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  const handleNumberChange = e => {
-    const input = e.target.value.replace(/\D/g, '');
-    setNumber(input);
-  };
-
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (!name || !number) {
-      alert('Please enter both name and number.');
-      return;
-    }
-
-    const isContactExists = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (isContactExists) {
+    if (contacts.find(contact => contact.name === name)) {
       alert(`${name} is already in contacts.`);
+      reset();
       return;
     }
 
-    const newContact = {
+    const user = {
+      id: 'id ' + nanoid(),
       name,
-      number,
+      phone,
     };
 
-    await dispatch(addContact(newContact));
+    dispatch(addContact(user));
+
+    reset();
+  };
+
+  const reset = () => {
     setName('');
     setNumber('');
   };
@@ -51,24 +59,26 @@ const ContactForm = () => {
         Name:
         <br />
         <input
-          type="text"
           className={css.formInput}
-          name="name"
-          required
-          value={name}
           onChange={handleNameChange}
+          type="text"
+          value={name}
+          name="name"
+          id={InputIdName}
+          required
         />
       </label>
       <label className={css.formLabel}>
         Number:
         <br />
         <input
-          type="tel"
           className={css.formInput}
+          onChange={handleNameChange}
+          type="tel"
+          value={phone}
           name="number"
+          id={InputIdPhone}
           required
-          value={number}
-          onChange={handleNumberChange}
         />
       </label>
       <button type="submit" className={css.formButton}>
