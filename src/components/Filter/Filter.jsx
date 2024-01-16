@@ -5,8 +5,10 @@ import css from './Filter.module.css';
 const Filter = () => {
   const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
+
   const handleFilterChange = e => {
-    dispatch(setFilter(e.target.value));
+    const { value } = e.target;
+    dispatch(setFilter(value));
   };
 
   return (
@@ -19,7 +21,7 @@ const Filter = () => {
         type="text"
         name="filter"
         value={filter}
-      ></input>
+      />
     </label>
   );
 };

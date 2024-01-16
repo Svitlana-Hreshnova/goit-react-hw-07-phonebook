@@ -16,9 +16,11 @@ const ContactList = () => {
   }, [dispatch]);
 
   const normalizedName = filter.toLowerCase();
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizedName)
-  );
+  const filteredContacts = normalizedName
+    ? contacts.filter(contact =>
+        contact.name.toLowerCase().includes(normalizedName)
+      )
+    : contacts;
 
   if (error === 'rejected') {
     return <div>Not found contacts</div>;
@@ -32,7 +34,7 @@ const ContactList = () => {
     <ul className={css.contactList}>
       {filteredContacts.map(contact => (
         <li key={contact.id} className={css.contactItem}>
-          {contact.name}: {contact.number}{' '}
+          {contact.name}: {contact.phone}{' '}
           <button
             type="button"
             className={css.deleteButton}
